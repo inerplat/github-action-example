@@ -6,4 +6,4 @@ RUN pip install --no-cache uvicorn
 
 COPY app.py .
 
-CMD ["/bin/sh", "-c", "uvicorn app:app --port 8080"]
+CMD ["/bin/sh", "-c", "uvicorn app:app --host 0.0.0.0 --port 8080"]
