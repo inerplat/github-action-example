@@ -1,9 +1,10 @@
 name: Python
 
 on:
+  create:
   # v* 태그가 달리면 action을 실행
-  tags:
-    - v*
+    tags:
+      - v*
   # 혹은 수동으로 실행시킬 수 있음
   workflow_dispatch:
 
