@@ -1,0 +1,32 @@
+# 사용할 이름을 지정
+name: CI
+
+# 해당 Action은 아래의 조건을 만족할 때 실행됨
+on:
+  push:
+    branches: [ main ] # main 브랜치에 push가 발생할 때
+  pull_request:
+    branches: [ main ] # main 브랜치에 pull_request가 발생할 때
+  
+  # 수동으로 해당 action을 실행하고 싶을때 필요한 옵션  
+  workflow_dispatch:
+
+jobs:
+  # say-hello 라는 job 정의
+  say-hello:
+    # ubuntu-latest github hosted runner를 사용
+    runs-on: ubuntu-latest
+    
+    # setps에 오는 내용들은 순서대로 수행
+    steps:
+      # repository 접근을 위해 checkout 수행
+      - uses: actions/checkout@v2
+
+      # [Script 1] 실행
+      - name: "[Script 1]"
+        run: echo Hello!
+
+      - name: "[Script 2]"
+        run: |
+          echo Hi! Hi!
+          echo This is multi line script
