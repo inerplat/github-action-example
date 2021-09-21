@@ -1,5 +1,5 @@
 # 사용할 이름을 지정
-name: CI
+name: Hi
 
 # 해당 Action은 아래의 조건을 만족할 때 실행됨
 on:
