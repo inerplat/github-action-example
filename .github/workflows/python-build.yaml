@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     # ubuntu-latest github runner 사용
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       # repository checkout
       - uses: actions/checkout@v2
