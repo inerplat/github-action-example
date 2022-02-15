@@ -1,0 +1,76 @@
+name: Java
+
+on:
+  create:
+    tags:
+      - v*
+  workflow_dispatch:
+  
+jobs:
+  jar:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+      - run: |
+          download_url="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.14.1%2B1/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.14.1_1.tar.gz"
+          wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
+      - 
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'jdkfile'
+          jdkFile: ${{ runner.temp }}/java_package.tar.gz
+          java-version: 11
+          architecture: arm64
+      - 
+        name: Add +x permission
+        working-directory: java
+        run: chmod +x gradlew     
+      - 
+        name: Gradle Build
+        working-directory: java
+        run: ./gradlew clean build
+      - 
+        name: Move app file
+        working-directory: java
+        run: mv ./build/libs/java*.jar ./app.jar
+      - 
+        name: Upload jar file to Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: run
+          path: ./java/app.jar
+          retention-days: 1         
+          
+  qemu-build:
+    needs: jar
+    runs-on: self-hosted
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+      - 
+        name: Download app from Artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: run
+      - 
+        name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+      - 
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - 
+        name: Move jar file
+        run: mv run java/  
+      -
+        name: Docker Build (amd64-qemu)
+        working-directory: java
+        run: docker buildx build --platform linux/amd64 -t spring-build-test:amd64 .
+      -
+        name: Docker Build (arm64)
+        working-directory: java
+        run: docker buildx build --platform linux/arm64 -t spring-build-test:arm64 .
