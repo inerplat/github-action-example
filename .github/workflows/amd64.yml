@@ -1,4 +1,4 @@
-name: Java
+name: java-amd64
 
 on:
   create:
