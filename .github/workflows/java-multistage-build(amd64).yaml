@@ -1,0 +1,29 @@
+name: java-multistage-amd64
+
+on:
+  workflow_dispatch:
+  
+jobs:
+      
+  qemu-build:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+      - 
+        name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+      - 
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - 
+        working-directory: java
+        name: Docker Build (amd64)
+        run: docker buildx build --platform linux/amd64 -f multi-stage.Dockerfile -t github-action-example:amd .
+      - 
+        working-directory: java
+        name: Docker Build (arm64-qemu)
+        run: docker buildx build --platform linux/arm64 -f multi-stage.Dockerfile -t github-action-example:arm .
