@@ -1,12 +1,9 @@
-FROM eclipse-temurin:11-jdk AS builder
-
-RUN apt update && apt install lib32z1 -y
+FROM gradle:7-jdk11
 
 WORKDIR /build
 COPY . .
 
-RUN chmod +x gradlew
-RUN ./gradlew build -x test
+RUN gradle build -x test
 
 
 FROM eclipse-temurin:11-jre
