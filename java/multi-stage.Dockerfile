@@ -1,4 +1,4 @@
-FROM gradle:7-jdk11
+FROM gradle:7-jdk11 AS builder
 
 WORKDIR /build
 COPY . .
